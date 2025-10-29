@@ -1,28 +1,138 @@
-
-
-
-
-
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>README 顯示</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>lcwihaoei.github.io</title>
+
+  <!-- GitHub 風格 Markdown 樣式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown.min.css" />
+  <style>
+    :root {
+      --fg: #111827;        /* slate-900 */
+      --muted: #6b7280;     /* gray-500 */
+      --card: #ffffff;
+      --bg: #f9fafb;        /* gray-50 */
+      --link: #2563eb;
+      --border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --card: #0b1220;
+        --bg: #0a0f1c;
+        --link: #60a5fa;
+        --border: #1f2937;
+      }
+    }
+    html,body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Ubuntu,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:48px auto;padding:0 20px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.06);overflow:hidden}
+    .header{display:flex;gap:16px;align-items:center;padding:20px;border-bottom:1px solid var(--border)}
+    .header img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
+    .title{font-size:28px;font-weight:800;line-height:1.2;margin:0}
+    .sub{margin:4px 0 0 0;color:var(--muted)}
+    .content{padding:20px}
+    .markdown-body{background:transparent !important}
+    .markdown-body a{word-break:break-word}
+    .footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:var(--muted);font-size:14px}
+    .chip{font-size:12px;padding:2px 8px;border:1px solid var(--border);border-radius:999px}
+  </style>
 </head>
 <body>
-  <main id="readme">Loading README…</main>
+  <div class="wrap">
+    <div class="card">
+      <div class="header">
+        <img id="avatar" alt="avatar" src="" />
+        <div>
+          <h1 class="title" id="displayName">lcwihaoei.github.io</h1>
+          <p class="sub" id="bio"></p>
+          <div class="sub"><span class="chip" id="loginChip">@lcwihaoei</span></div>
+        </div>
+      </div>
 
+      <div class="content">
+        <article id="readme" class="markdown-body">
+          <p>Loading README…</p>
+        </article>
+      </div>
+
+      <div class="footer">
+        <span id="updated">Last updated: —</span>
+        <span><a href="https://github.com/lcwihaoei/lcwihaoei.github.io">View on GitHub</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轉 Markdown 用 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    const el = document.getElementById('readme');
-    fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
-      .then(r => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.text();
+    // ====== 設定區 ======
+    const USER   = "lcwihaoei";
+    const REPO   = "lcwihaoei.github.io";
+    const BRANCH = "main"; // 或你的預設分支
+
+    // ====== 抓作者資訊（名稱、頭像、bio） ======
+    fetch(`https://api.github.com/users/${USER}`)
+      .then(r => r.json())
+      .then(u => {
+        const name = u.name && u.name.trim() ? u.name : USER;
+        document.getElementById("displayName").textContent = name;
+        document.getElementById("avatar").src = u.avatar_url || "";
+        document.getElementById("bio").textContent = u.bio || "";
+        document.getElementById("loginChip").textContent = "@" + (u.login || USER);
       })
-      .then(md => { el.innerHTML = marked.parse(md); })
-      .catch(err => { el.textContent = '讀取 README 失敗：' + err; });
+      .catch(() => {}); // 失敗就保持預設
+
+    // ====== 抓 README 並渲染 ======
+    const readmeEl = document.getElementById("readme");
+    const stamp = () => new Date().toLocaleString();
+
+    async function loadReadme() {
+      try {
+        // 用 raw.githubusercontent.com 避免 CORS
+        const url = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/README.md?t=${Date.now()}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const md = await res.text();
+        marked.setOptions({ breaks: true });
+        readmeEl.innerHTML = marked.parse(md);
+
+        fixUndefinedPRLinks();
+        document.getElementById("updated").textContent = "Last updated: " + stamp();
+      } catch (e) {
+        readmeEl.innerHTML = `<p style="color:#ef4444">讀取 README 失敗：${e.message || e}</p>`;
+      }
+    }
+
+    // ====== 修補 "](undefined)" 的 PR 連結（盡力而為） ======
+    function fixUndefinedPRLinks() {
+      // 1) 直接把 href="undefined" 的 a 改成純文字或推斷 PR URL
+      const anchors = readmeEl.querySelectorAll('a[href="undefined"]');
+      anchors.forEach(a => {
+        // 從文字抓 PR 編號 #123
+        const m = a.textContent.match(/#(\d+)/);
+        // 找到同一條目中最近的一個 repo 連結
+        let li = a.closest('li') || a.parentElement;
+        let repoHref = null;
+        if (li) {
+          const repoA = Array.from(li.querySelectorAll('a')).find(x => /github\.com\/[^/]+\/[^/]+$/.test(x.href));
+          if (repoA) repoHref = repoA.href.replace(/\/$/, '');
+        }
+        if (m && repoHref) {
+          a.href = `${repoHref}/pull/${m[1]}`;
+        } else {
+          // 沒法推斷就移除連結，只留文字
+          const span = document.createElement('span');
+          span.textContent = a.textContent;
+          a.replaceWith(span);
+        }
+      });
+    }
+
+    loadReadme();
   </script>
 </body>
 </html>
