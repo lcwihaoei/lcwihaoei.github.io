@@ -1,14 +1,27 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>My GitHub Pages Site</title>
-  </head>
-  <body>
-    <h1>My GitHub Pages Site</h1>
-    <p>Owner: YOUR_NAME</p>
-    <p>Course: DevOps</p>
-    <p>Deployed via GitHub Pages.</p>
-  </body>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>README 顯示</title>
+</head>
+<body>
+  <main id="readme">Loading README…</main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // 若 Pages 從根目錄發佈：抓同目錄的 README.md
+    // 若從 docs/ 發佈：把路徑改成 './README.md' 並確保 README.md 在 docs/ 下
+    fetch('./README.md', { cache: 'no-store' })
+      .then(r => r.text())
+      .then(md => {
+        // 可選：把 GitHub 風格換行處理好
+        marked.setOptions({ breaks: true });
+        document.getElementById('readme').innerHTML = marked.parse(md);
+      })
+      .catch(err => {
+        document.getElementById('readme').textContent = '讀取 README 失敗：' + err;
+      });
+  </script>
+</body>
 </html>
