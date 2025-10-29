@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: lcwihaoei/github-activity-readme@master
-        with:
-          repo: lcwihaoei/lcwihaoei.github.io
+        # with:
+        #   repo: lcwihaoei/lcwihaoei.github.io
         env:
           GITHUB_TOKEN: ${{ secrets.README_TOKEN }}
