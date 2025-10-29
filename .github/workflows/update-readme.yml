@@ -12,8 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: lcwihaoei/github-activity-readme@master
+      - uses: lcwihaoei/lcwihaoei.github.io@master
         with:
-          repo: lcwihaoei/Smart-Parking
+          repo: lcwihaoei/lcwihaoei.github.io
         env:
           GITHUB_TOKEN: ${{ secrets.README_TOKEN }}
