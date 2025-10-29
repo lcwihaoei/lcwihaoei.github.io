@@ -10,18 +10,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    // 若 Pages 從根目錄發佈：抓同目錄的 README.md
-    // 若從 docs/ 發佈：把路徑改成 './README.md' 並確保 README.md 在 docs/ 下
-    fetch('./README.md', { cache: 'no-store' })
-      .then(r => r.text())
+    const api = 'https://github.com/lcwihaoei/lcwihaoei.github.io'; // 改你的帳號/倉庫
+    fetch(api)
+      .then(r => r.json())
+      .then(({ content }) => atob(content)) // base64 → 純文字 Markdown
       .then(md => {
-        // 可選：把 GitHub 風格換行處理好
-        marked.setOptions({ breaks: true });
         document.getElementById('readme').innerHTML = marked.parse(md);
       })
-      .catch(err => {
-        document.getElementById('readme').textContent = '讀取 README 失敗：' + err;
-      });
-  </script>
+      .catch(console.error);
+    </script>
+
 </body>
 </html>
