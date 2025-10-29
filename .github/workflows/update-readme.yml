@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: lcwihaoei/lcwihaoei.github.io@master
+      - uses: lcwihaoei/github-activity-readme@master
         with:
           repo: lcwihaoei/lcwihaoei.github.io
         env:
