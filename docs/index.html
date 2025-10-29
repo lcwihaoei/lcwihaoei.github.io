@@ -12,7 +12,7 @@
   <script>
     // 若 Pages 從根目錄發佈：抓同目錄的 README.md
     // 若從 docs/ 發佈：把路徑改成 './README.md' 並確保 README.md 在 docs/ 下
-    fetch('./README.md', { cache: 'no-store' })
+    fetch('./../README.md', { cache: 'no-store' })
       .then(r => r.text())
       .then(md => {
         // 可選：把 GitHub 風格換行處理好
