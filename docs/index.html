@@ -1,21 +1,11 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>README 顯示</title>
-</head>
-<body>
-  <main id="readme">Loading README…</main>
-
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    const api = 'https://github.com/lcwihaoei/lcwihaoei.github.io'; // 改你的帳號/倉庫
-    fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
-      .then(r => r.text())
-      .then(md => document.getElementById('readme').innerHTML = marked.parse(md))
-      .catch(e => document.getElementById('readme').textContent = '讀取失敗：' + e);
-    </script>
-
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const el = document.getElementById('readme');
+  fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(md => { el.innerHTML = marked.parse(md); })
+    .catch(err => { el.textContent = '讀取 README 失敗：' + err; });
+</script>
