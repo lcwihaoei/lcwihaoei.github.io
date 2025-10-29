@@ -11,13 +11,10 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const api = 'https://github.com/lcwihaoei/lcwihaoei.github.io'; // 改你的帳號/倉庫
-    fetch(api)
-      .then(r => r.json())
-      .then(({ content }) => atob(content)) // base64 → 純文字 Markdown
-      .then(md => {
-        document.getElementById('readme').innerHTML = marked.parse(md);
-      })
-      .catch(console.error);
+    fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
+      .then(r => r.text())
+      .then(md => document.getElementById('readme').innerHTML = marked.parse(md))
+      .catch(e => document.getElementById('readme').textContent = '讀取失敗：' + e);
     </script>
 
 </body>
