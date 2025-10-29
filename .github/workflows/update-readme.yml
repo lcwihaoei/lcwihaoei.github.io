@@ -16,4 +16,4 @@ jobs:
         with:
           repo: lcwihaoei/lcwihaoei.github.io
         env:
-          GITHUB_TOKEN: ${{ secrets.README_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
