@@ -1,11 +1,28 @@
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-  const el = document.getElementById('readme');
-  fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.text();
-    })
-    .then(md => { el.innerHTML = marked.parse(md); })
-    .catch(err => { el.textContent = '讀取 README 失敗：' + err; });
-</script>
+
+
+
+
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>README 顯示</title>
+</head>
+<body>
+  <main id="readme">Loading README…</main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const el = document.getElementById('readme');
+    fetch('./README.md?t=' + Date.now(), { cache: 'no-store' })
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(md => { el.innerHTML = marked.parse(md); })
+      .catch(err => { el.textContent = '讀取 README 失敗：' + err; });
+  </script>
+</body>
+</html>
