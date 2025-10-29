@@ -5,134 +5,165 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>lcwihaoei.github.io</title>
 
-  <!-- GitHub 風格 Markdown 樣式 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown.min.css" />
+  <!-- GitHub Markdown 樣式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown.min.css">
+
   <style>
-    :root {
-      --fg: #111827;        /* slate-900 */
-      --muted: #6b7280;     /* gray-500 */
-      --card: #ffffff;
-      --bg: #f9fafb;        /* gray-50 */
-      --link: #2563eb;
-      --border: #e5e7eb;
+    :root{
+      --bg:#0a0f1c; --card:#0b1220; --border:#1f2937; --fg:#e5e7eb; --muted:#9ca3af; --link:#8ab4ff; --chip:#111827;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --fg: #e5e7eb;
-        --muted: #9ca3af;
-        --card: #0b1220;
-        --bg: #0a0f1c;
-        --link: #60a5fa;
-        --border: #1f2937;
-      }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f7fafc; --card:#ffffff; --border:#e5e7eb; --fg:#111827; --muted:#6b7280; --link:#2563eb; --chip:#f3f4f6; }
     }
-    html,body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Ubuntu,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji";}
-    a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Ubuntu,"Helvetica Neue",Arial}
+    a{color:var(--link);text-decoration:none}
+    a:hover{text-decoration:underline}
     .wrap{max-width:980px;margin:48px auto;padding:0 20px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.06);overflow:hidden}
-    .header{display:flex;gap:16px;align-items:center;padding:20px;border-bottom:1px solid var(--border)}
-    .header img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
-    .title{font-size:28px;font-weight:800;line-height:1.2;margin:0}
-    .sub{margin:4px 0 0 0;color:var(--muted)}
-    .content{padding:20px}
-    .markdown-body{background:transparent !important}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.18);overflow:hidden}
+    .row{display:flex;gap:18px;align-items:center}
+    .header{padding:22px 22px 14px;border-bottom:1px solid var(--border)}
+    .avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
+    .title{margin:0;font-size:28px;font-weight:800;line-height:1.2}
+    .sub{margin:4px 0 0;color:var(--muted)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .chip{font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--chip);color:var(--fg)}
+    .content{padding:22px}
+    .section-title{margin:0 0 12px;font-size:18px;font-weight:700}
+    .stats{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 18px}
+    .stat{display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:10px}
+    .markdown-body{background:transparent !important;color:var(--fg)}
     .markdown-body a{word-break:break-word}
-    .footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:var(--muted);font-size:14px}
-    .chip{font-size:12px;padding:2px 8px;border:1px solid var(--border);border-radius:999px}
+    .activity{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .activity li{padding:12px 14px;border:1px solid var(--border);border-radius:12px}
+    .foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:var(--muted);font-size:14px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
+      <!-- 頭部：作者資訊 -->
       <div class="header">
-        <img id="avatar" alt="avatar" src="" />
-        <div>
-          <h1 class="title" id="displayName">lcwihaoei.github.io</h1>
-          <p class="sub" id="bio"></p>
-          <div class="sub"><span class="chip" id="loginChip">@lcwihaoei</span></div>
+        <div class="row">
+          <img id="avatar" class="avatar" alt="avatar" src="">
+          <div>
+            <h1 class="title" id="displayName">lcwihaoei.github.io</h1>
+            <p class="sub" id="bio"></p>
+            <div class="chips">
+              <span class="chip" id="loginChip">@lcwihaoei</span>
+              <span class="chip" id="locationChip" style="display:none"></span>
+              <span class="chip" id="followersChip" style="display:none"></span>
+              <span class="chip" id="pubRepoChip" style="display:none"></span>
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- 內容：repo 統計 + 活動 / README -->
       <div class="content">
-        <article id="readme" class="markdown-body">
-          <p>Loading README…</p>
-        </article>
+        <h2 class="section-title">Repository</h2>
+        <div class="stats" id="repoStats" style="display:none">
+          <div class="stat">⭐ <span id="stars">0</span> Stars</div>
+          <div class="stat">🍴 <span id="forks">0</span> Forks</div>
+          <div class="stat">🕒 Updated <span id="updated">—</span></div>
+          <div class="stat"><a id="repoLink" href="#" target="_blank" rel="noopener">View on GitHub ↗</a></div>
+        </div>
+
+        <h2 class="section-title">Recent Activity</h2>
+        <ul id="activityList" class="activity"></ul>
+
+        <div id="readmeBlock" style="margin-top:22px">
+          <h2 class="section-title">README</h2>
+          <article id="readme" class="markdown-body"><p>Loading README…</p></article>
+        </div>
       </div>
 
-      <div class="footer">
-        <span id="updated">Last updated: —</span>
-        <span><a href="https://github.com/lcwihaoei/lcwihaoei.github.io">View on GitHub</a></span>
+      <div class="foot">
+        <span id="stamp">Last updated: —</span>
+        <span>Theme follows system</span>
       </div>
     </div>
   </div>
 
-  <!-- 轉 Markdown 用 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    // ====== 設定區 ======
+    // ===== 設定 =====
     const USER   = "lcwihaoei";
     const REPO   = "lcwihaoei.github.io";
-    const BRANCH = "main"; // 或你的預設分支
+    const BRANCH = "main";
 
-    // ====== 抓作者資訊（名稱、頭像、bio） ======
+    const $ = s => document.querySelector(s);
+    const setText = (id, v) => (document.getElementById(id).textContent = v);
+
+    // ===== 作者資訊 =====
     fetch(`https://api.github.com/users/${USER}`)
       .then(r => r.json())
       .then(u => {
-        const name = u.name && u.name.trim() ? u.name : USER;
-        document.getElementById("displayName").textContent = name;
-        document.getElementById("avatar").src = u.avatar_url || "";
-        document.getElementById("bio").textContent = u.bio || "";
-        document.getElementById("loginChip").textContent = "@" + (u.login || USER);
-      })
-      .catch(() => {}); // 失敗就保持預設
+        const name = u.name?.trim() || USER;
+        $("#displayName").textContent = name;
+        $("#avatar").src = u.avatar_url || "";
+        $("#bio").textContent = u.bio || "";
+        $("#loginChip").textContent = "@" + (u.login || USER);
+        if (u.location){ const lc = $("#locationChip"); lc.textContent = "📍 " + u.location; lc.style.display="inline-block"; }
+        if (typeof u.followers === "number"){ const fc = $("#followersChip"); fc.textContent = "👥 " + u.followers + " followers"; fc.style.display="inline-block"; }
+        if (typeof u.public_repos === "number"){ const pc = $("#pubRepoChip"); pc.textContent = "📦 " + u.public_repos + " public repos"; pc.style.display="inline-block"; }
+      }).catch(()=>{});
 
-    // ====== 抓 README 並渲染 ======
-    const readmeEl = document.getElementById("readme");
-    const stamp = () => new Date().toLocaleString();
+    // ===== Repo 統計 =====
+    fetch(`https://api.github.com/repos/${USER}/${REPO}`)
+      .then(r => r.json())
+      .then(repo => {
+        if (!repo || repo.message) return;
+        $("#repoStats").style.display = "flex";
+        setText("stars", repo.stargazers_count ?? 0);
+        setText("forks", repo.forks_count ?? 0);
+        setText("updated", new Date(repo.pushed_at || repo.updated_at).toLocaleString());
+        const link = $("#repoLink"); link.href = repo.html_url; link.textContent = "View on GitHub ↗";
+      }).catch(()=>{});
 
-    async function loadReadme() {
-      try {
-        // 用 raw.githubusercontent.com 避免 CORS
-        const url = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/README.md?t=${Date.now()}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // ===== 讀取 README 並解析活動區塊 =====
+    async function loadReadmeAndActivity(){
+      try{
+        const raw = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/README.md?t=${Date.now()}`;
+        const res = await fetch(raw);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const md = await res.text();
-        marked.setOptions({ breaks: true });
-        readmeEl.innerHTML = marked.parse(md);
 
-        fixUndefinedPRLinks();
-        document.getElementById("updated").textContent = "Last updated: " + stamp();
-      } catch (e) {
-        readmeEl.innerHTML = `<p style="color:#ef4444">讀取 README 失敗：${e.message || e}</p>`;
+        // 渲染整份 README
+        marked.setOptions({ breaks:true });
+        $("#readme").innerHTML = marked.parse(md);
+
+        // 擷取活動區塊
+        const m = md.match(/<!--START_SECTION:activity-->\s*([\s\S]*?)\s*<!--END_SECTION:activity-->/i);
+        const list = $("#activityList");
+        if (m && m[1].trim()){
+          // 拆成每一行項目（去掉開頭的數字與點）
+          const lines = m[1].split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          list.innerHTML = "";
+          for (const item of lines){
+            // 把 Markdown 行轉成 HTML
+            const html = marked.parse(item.replace(/^\d+\.\s*/, ""));
+            const li = document.createElement("li"); li.innerHTML = html;
+            // 修補 [#123](undefined) → 推斷成 repo/pull/123
+            li.querySelectorAll('a[href="undefined"]').forEach(a => {
+              const n = a.textContent.match(/#(\d+)/)?.[1];
+              // 找同一行的 repo 連結
+              const repoA = Array.from(li.querySelectorAll("a")).find(x => /github\.com\/[^/]+\/[^/]+$/.test(x.href));
+              if (n && repoA){ a.href = repoA.href.replace(/\/$/, "") + "/pull/" + n; }
+              else { const span = document.createElement("span"); span.textContent = a.textContent; a.replaceWith(span); }
+            });
+            list.appendChild(li);
+          }
+        }else{
+          // 沒有活動區塊就隱藏
+          $("#activityList").outerHTML = '<p class="sub">No recent activity section found.</p>';
+        }
+        $("#stamp").textContent = "Last updated: " + new Date().toLocaleString();
+      }catch(e){
+        $("#readme").innerHTML = `<p style="color:#ef4444">讀取 README 失敗：${e.message||e}</p>`;
       }
     }
-
-    // ====== 修補 "](undefined)" 的 PR 連結（盡力而為） ======
-    function fixUndefinedPRLinks() {
-      // 1) 直接把 href="undefined" 的 a 改成純文字或推斷 PR URL
-      const anchors = readmeEl.querySelectorAll('a[href="undefined"]');
-      anchors.forEach(a => {
-        // 從文字抓 PR 編號 #123
-        const m = a.textContent.match(/#(\d+)/);
-        // 找到同一條目中最近的一個 repo 連結
-        let li = a.closest('li') || a.parentElement;
-        let repoHref = null;
-        if (li) {
-          const repoA = Array.from(li.querySelectorAll('a')).find(x => /github\.com\/[^/]+\/[^/]+$/.test(x.href));
-          if (repoA) repoHref = repoA.href.replace(/\/$/, '');
-        }
-        if (m && repoHref) {
-          a.href = `${repoHref}/pull/${m[1]}`;
-        } else {
-          // 沒法推斷就移除連結，只留文字
-          const span = document.createElement('span');
-          span.textContent = a.textContent;
-          a.replaceWith(span);
-        }
-      });
-    }
-
-    loadReadme();
+    loadReadmeAndActivity();
   </script>
 </body>
 </html>
